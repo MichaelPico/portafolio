@@ -3,6 +3,9 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import MPLogo from '../assets/michael-pico-logo.svg';
 
 const Navbar = () => {
+
+  const linkedin_url = process.env.REACT_APP_LINKEDIN_URL;
+  const github_url = process.env.REACT_APP_GITHUB_URL;
   return (
     <Box as="nav" position="fixed" w="100%" top={0} zIndex={100}>
       <Flex 
@@ -25,7 +28,7 @@ const Navbar = () => {
         />
         <Flex gap={4}>
           <Link 
-            href="https://github.com/your-github-username" 
+            href={github_url}
             isExternal
             color="gray.400"
             _hover={{
@@ -35,7 +38,7 @@ const Navbar = () => {
             <FaGithub size={40} />
           </Link>
           <Link 
-            href="https://linkedin.com/in/your-linkedin-profile" 
+            href={linkedin_url}
             isExternal
             color="gray.400"
             _hover={{
