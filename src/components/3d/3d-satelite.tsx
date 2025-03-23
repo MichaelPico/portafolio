@@ -28,62 +28,51 @@ const SatelliteModel = ({ isMobile }: { isMobile: boolean }) => {
     return <primitive object={scene} scale={scaleValue} position={[0, -30, 0]} />;
   };
 
-const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
-  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+    const [maxScroll, setMaxScroll] = useState(0);
   
-  // Track the maximum scroll position to normalize values
-  const [maxScroll, setMaxScroll] = useState(0);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    const updateMaxScroll = () => {
-      const docHeight = document.body.scrollHeight;
-      const windowHeight = window.innerHeight;
-      setMaxScroll(docHeight - windowHeight);
-    };
-    
-    checkMobile();
-    updateMaxScroll();
-    
-    window.addEventListener("resize", () => {
-      checkMobile();
+    useEffect(() => {
+      const updateMaxScroll = () => {
+        const docHeight = document.body.scrollHeight;
+        const windowHeight = window.innerHeight;
+        setMaxScroll(docHeight - windowHeight);
+      };
+  
       updateMaxScroll();
+      
+      window.addEventListener("resize", updateMaxScroll);
+      
+      return () => window.removeEventListener("resize", updateMaxScroll);
+    }, []);
+  
+    useFrame(() => {
+      if (cameraRef.current && maxScroll > 0) {
+        const scrollProgress = Math.min(scrollPosition / maxScroll, 1);
+        const radius = 200;
+        
+        // Map scroll progress to an angle that goes from top to bottom (π to -π)
+        const angle = (Math.PI / 1) * (1 - 2 * scrollProgress);
+        
+        const x = 50; 
+        const y = radius * Math.sin(angle);
+        const z = radius * Math.cos(angle);
+        
+        cameraRef.current.position.set(x, y, z);
+        cameraRef.current.lookAt(0, 0, 0);
+      }
     });
-    
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useFrame(() => {
-    if (cameraRef.current && maxScroll > 0) {
-      const scrollProgress = Math.min(scrollPosition / maxScroll, 1);
-      const radius = 200;
-      
-      // Map scroll progress to an angle that goes from top to bottom (π to -π)
-      const angle = (Math.PI / 1) * (1 - 2 * scrollProgress);
-      
-      
-      const x = 50; 
-      const y = radius * Math.sin(angle);
-      const z = radius * Math.cos(angle);
-      
-      cameraRef.current.position.set(x, y, z);
-      cameraRef.current.lookAt(0, 0, 0);
-    }
-  });
-
-  return (
-    <PerspectiveCamera
-      ref={cameraRef}
-      makeDefault
-      position={[50, 200, 400]}
-      fov={45}
-    />
-  );
-};
+  
+    return (
+      <PerspectiveCamera
+        ref={cameraRef}
+        makeDefault
+        position={[50, 200, 400]}
+        fov={45}
+      />
+    );
+  };
+  
 
 const LoadingScreen = () => {
   const { progress } = useProgress();

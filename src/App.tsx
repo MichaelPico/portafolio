@@ -4,7 +4,6 @@ import Navbar from "./layouts/navbar";
 import Background3D from "./components/3d/3d-starts-background";
 import HelloSection from "./components/sections/hello-section";
 import SummarySection from "./components/sections/summary-section";
-import Cosmonaut3D from "./components/3d/3d-cosmonaut";
 import Satellite3D from "./components/3d/3d-satelite";
 
 function App() {
