@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { PerspectiveCamera, useGLTF, useProgress } from "@react-three/drei";
 import modelUrl from "../assets/cosmonaut_on_a_rocket.glb";
-import { Box } from "@chakra-ui/react";
+import { Box, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
@@ -61,9 +61,29 @@ const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
   );
 };
 
+const LoadingScreen = () => {
+  const { progress } = useProgress();
+  return (
+    <VStack
+      position="absolute"
+      top="50%"
+      left="50%"
+      transform="translate(-50%, -50%)"
+      spacing={4}
+    >
+      <Spinner size="xl" color="white" />
+      <Text color="white" fontSize="lg">
+        Loading... {progress.toFixed(0)}%
+      </Text>
+    </VStack>
+  );
+};
+
 const Cosmonaut3D = () => {
   // State to track scroll position
   const [scrollPosition, setScrollPosition] = useState(0);
+  const { progress } = useProgress();
+  const isLoading = progress < 100;
 
   // Track scroll position
   useEffect(() => {
@@ -112,6 +132,7 @@ const Cosmonaut3D = () => {
         />
         <CosmonautModel />
       </Canvas>
+      {isLoading && <LoadingScreen />}
     </Box>
   );
 };
