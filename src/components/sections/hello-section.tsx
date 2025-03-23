@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import Cosmonaut3D from "./3d-cosmonaut";
+import Cosmonaut3D from "../3d/3d-cosmonaut";
 import { useEffect, useState } from "react";
 
 export default function HelloSection() {
@@ -83,7 +83,7 @@ export default function HelloSection() {
           {...textStyles}
           className={scrollY > 100 ? "fade-out" : ""}
         >
-          I am Michael Pico
+          I am Michael Pico!
         </Box>
       </Box>
     </Box>
