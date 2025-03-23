@@ -5,6 +5,7 @@ import Background3D from "./components/3d/3d-starts-background";
 import HelloSection from "./components/sections/hello-section";
 import SummarySection from "./components/sections/summary-section";
 import Satellite3D from "./components/3d/3d-satelite";
+import TechnologiesSection from "./components/sections/technologies";
 
 function App() {
   return (
@@ -13,9 +14,8 @@ function App() {
       <Background3D />
       <HelloSection />
       <SummarySection />
-      <Box h="100vh" display="flex" alignItems="center" justifyContent="center">
-        <Satellite3D />
-      </Box>
+      <Satellite3D />
+      <TechnologiesSection />
       <Box h="100vh" display="flex" alignItems="center" justifyContent="center">
         Section 1
       </Box>
