@@ -9,8 +9,8 @@ const RotatingScene = () => {
 
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.001; // Adjust speed here
-      groupRef.current.rotation.x += 0.0005; // Slight tilt effect
+      groupRef.current.rotation.y += 0.0005;
+      groupRef.current.rotation.x += 0.00025;
     }
   });
 
@@ -39,7 +39,7 @@ const Background3D = () => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[2, 2, 2]} intensity={1} />
         <RotatingScene />
-        <OrbitControls autoRotate autoRotateSpeed={0.5} enableZoom={false} />
+        <OrbitControls autoRotate autoRotateSpeed={0.02} enableZoom={false} />
       </Canvas>
     </Box>
   );
