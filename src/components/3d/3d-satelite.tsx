@@ -23,7 +23,7 @@ const SatelliteModel = ({ isMobile }: { isMobile: boolean }) => {
       if (mixer.current) mixer.current.update(delta);
     });
   
-    const scaleValue = isMobile ? 0.8 : 2;
+    const scaleValue = isMobile ? 0.8 : 3;
   
     return <primitive object={scene} scale={scaleValue} position={[0, -30, 0]} />;
   };
@@ -52,9 +52,12 @@ const SatelliteModel = ({ isMobile }: { isMobile: boolean }) => {
         const radius = 200;
         
         // Map scroll progress to an angle that goes from top to bottom (π to -π)
-        const angle = (Math.PI / 1) * (1 - 2 * scrollProgress);
+        const angle = (1 * Math.PI / 1.2) * (1 - 2.1 * scrollProgress);
         
-        const x = 50; 
+        // Add an offset to the x position (30 degrees converted to radians)
+        const angleOffset = Math.PI / 6;  // 30 degrees in radians
+        
+        const x = -50 * Math.cos(angleOffset);  // Apply angleOffset to the x position
         const y = radius * Math.sin(angle);
         const z = radius * Math.cos(angle);
         
@@ -67,7 +70,7 @@ const SatelliteModel = ({ isMobile }: { isMobile: boolean }) => {
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
-        position={[50, 200, 400]}
+        position={[200, 300, 500]}
         fov={45}
       />
     );
@@ -129,8 +132,13 @@ const Satellite3D = () => {
           <ambientLight intensity={0.5} />
           <directionalLight
             position={[100, 100, 100]}
-            intensity={1.5}
+            intensity={3.5}
             castShadow
+            shadow-mapSize={[1024, 1024]}
+            shadow-camera-left={-100}
+            shadow-camera-right={100}
+            shadow-camera-top={100}
+            shadow-camera-bottom={-100}
           />
           <SatelliteModel isMobile={isMobile} />
         </Canvas>

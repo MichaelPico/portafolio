@@ -5,7 +5,7 @@ import { Box, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-const CosmonautModel = () => {
+const CosmonautModel = ({ isMobile }: { isMobile: boolean }) => {
   const { scene, animations } = useGLTF(modelUrl);
   const mixer = useRef<THREE.AnimationMixer | null>(null);
 
@@ -24,7 +24,7 @@ const CosmonautModel = () => {
     if (mixer.current) mixer.current.update(delta);
   });
 
-  return <primitive object={scene} scale={0.4} />;
+  return <primitive object={scene} scale={isMobile ? 0.4 : 0.55} />;
 };
 
 const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
@@ -82,6 +82,7 @@ const LoadingScreen = () => {
 const Cosmonaut3D = () => {
   // State to track scroll position
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const { progress } = useProgress();
   const isLoading = progress < 100;
 
@@ -96,6 +97,17 @@ const Cosmonaut3D = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Log credits in the console
@@ -130,7 +142,7 @@ const Cosmonaut3D = () => {
           shadow-camera-top={100}
           shadow-camera-bottom={-100}
         />
-        <CosmonautModel />
+        <CosmonautModel isMobile={isMobile} />
       </Canvas>
       {isLoading && <LoadingScreen />}
     </Box>
