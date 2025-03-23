@@ -13,7 +13,7 @@ const Navbar = () => {
         py={4} 
         justify="space-between"
         align="center"
-        bg="black"
+        bg="rgba(0, 0, 0, 0.9)"
         borderBottom="2px"
         borderColor="gray.900"
       >
