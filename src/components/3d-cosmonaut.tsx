@@ -30,12 +30,12 @@ const CosmonautModel = () => {
 // Camera component that reacts to scroll
 const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-  
+
   // Update camera position based on scroll
   useFrame(() => {
     if (cameraRef.current) {
       // Move camera along X axis based on scroll
-      cameraRef.current.position.x = 200 - (scrollPosition * 1);
+      cameraRef.current.position.x = 200 - scrollPosition * 1;
       // You can also adjust other parameters like rotation
       // cameraRef.current.lookAt(0, 0, 0); // Optional: keep camera looking at center
     }
@@ -54,19 +54,28 @@ const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
 const Cosmonaut3D = () => {
   // State to track scroll position
   const [scrollPosition, setScrollPosition] = useState(0);
-  
+
   // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
     };
-    
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // Log credits in the console
+  useEffect(() => {
+    console.log(
+      "3D Cosmonaut model created by Yury Misiyuk (Tim0)\n" +
+      "Licensed under CC Attribution Creative Commons Attribution\n" +
+      "Source: https://sketchfab.com/3d-models/cosmonaut-on-a-rocket-e93cbbdb9a2144fb9f63d062566f3e63"
+    );
+  }, []); // Empty dependency array ensures this only runs once on mount
 
   return (
     <Box
@@ -80,9 +89,9 @@ const Cosmonaut3D = () => {
     >
       <Canvas>
         <ScrollCamera scrollPosition={scrollPosition} />
-        <ambientLight intensity={0.5} /> 
-        <directionalLight 
-          position={[0, 50, 300]} 
+        <ambientLight intensity={0.5} />
+        <directionalLight
+          position={[0, 50, 300]}
           intensity={1.5}
           castShadow
           shadow-mapSize={[1024, 1024]}

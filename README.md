@@ -25,6 +25,12 @@ A personal portfolio website built with modern web technologies.
 
 ``npm run dev``
 
+## Credits
+
+The 3D Cosmonaut model used in this project is created by Yury Misiyuk (Tim0) and is licensed under CC Attribution Creative Commons Attribution.
+
+Original model can be found at: https://sketchfab.com/3d-models/cosmonaut-on-a-rocket-e93cbbdb9a2144fb9f63d062566f3e63
+
 ## License
 
 MIT
