@@ -3,7 +3,6 @@ import { Box } from '@chakra-ui/react';
 import Navbar from './layouts/navbar';
 import Background3D from './components/3d-starts-background';
 import Cosmonaut3D from './components/3d-cosmonaut';
-import { ScrollControls } from '@react-three/drei';
 
 function App() {
   return (

@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import modelUrl from "../assets/cosmonaut_on_a_rocket.glb";
 import { Box } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
