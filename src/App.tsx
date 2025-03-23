@@ -3,6 +3,7 @@ import { Box } from "@chakra-ui/react";
 import Navbar from "./layouts/navbar";
 import Background3D from "./components/3d-starts-background";
 import HelloSection from "./components/hello-section";
+import SummarySection from "./components/summary-section";
 
 function App() {
   return (
@@ -10,9 +11,7 @@ function App() {
       <Navbar />
       <Background3D />
       <HelloSection />
-      <Box h="100vh" display="flex" alignItems="center" justifyContent="center">
-        Section 3
-      </Box>
+      <SummarySection />
       <Box h="100vh" display="flex" alignItems="center" justifyContent="center">
         Section 4
       </Box>

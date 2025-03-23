@@ -74,7 +74,7 @@ export default function HelloSection() {
       >
         <Box
           {...textStyles}
-          mb={`${Math.max(0, 2.5 - scrollY/40)}vh`}
+          mb={`${Math.max(-40, 0 - scrollY/20)}vh`}
           className={scrollY > 100 ? "fade-out" : ""}
         >
           Hello,
