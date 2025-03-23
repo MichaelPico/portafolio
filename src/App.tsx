@@ -22,8 +22,8 @@ function App() {
             top="74px"
             padding="20px"
           >
-            <Box
-              fontSize="8xl"
+             <Box
+              fontSize={["4xl", "6xl", "8xl"]}
               fontWeight="bold"
               color="white"
             >

@@ -27,17 +27,27 @@ const CosmonautModel = () => {
   return <primitive object={scene} scale={0.5} />;
 };
 
-// Camera component that reacts to scroll
 const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Update camera position based on scroll
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   useFrame(() => {
     if (cameraRef.current) {
-      // Move camera along X axis based on scroll
-      cameraRef.current.position.x = 200 - scrollPosition * 1;
-      // You can also adjust other parameters like rotation
-      // cameraRef.current.lookAt(0, 0, 0); // Optional: keep camera looking at center
+      // Reduce scroll sensitivity for mobile devices
+      const scrollMultiplier = isMobile ? 0.5 : 1;
+      const startingPostion = isMobile ? 20 : 200;
+      cameraRef.current.position.x = startingPostion - scrollPosition * scrollMultiplier;
     }
   });
 
@@ -72,8 +82,8 @@ const Cosmonaut3D = () => {
   useEffect(() => {
     console.log(
       "3D Cosmonaut model created by Yury Misiyuk (Tim0)\n" +
-      "Licensed under CC Attribution Creative Commons Attribution\n" +
-      "Source: https://sketchfab.com/3d-models/cosmonaut-on-a-rocket-e93cbbdb9a2144fb9f63d062566f3e63"
+        "Licensed under CC Attribution Creative Commons Attribution\n" +
+        "Source: https://sketchfab.com/3d-models/cosmonaut-on-a-rocket-e93cbbdb9a2144fb9f63d062566f3e63"
     );
   }, []); // Empty dependency array ensures this only runs once on mount
 
