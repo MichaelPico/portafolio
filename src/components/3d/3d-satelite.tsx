@@ -23,43 +23,37 @@ const SatelliteModel = ({ isMobile }: { isMobile: boolean }) => {
       if (mixer.current) mixer.current.update(delta);
     });
   
-    const scaleValue = isMobile ? 0.8 : 3;
+    const scaleValue = isMobile ? 2 : 3;
   
     return <primitive object={scene} scale={scaleValue} position={[0, -30, 0]} />;
-  };
+};
 
-  const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
+const ScrollCamera = ({ scrollProgress }: { scrollProgress: number }) => {
     const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-    const [maxScroll, setMaxScroll] = useState(0);
-  
-    useEffect(() => {
-      const updateMaxScroll = () => {
-        const docHeight = document.body.scrollHeight;
-        const windowHeight = window.innerHeight;
-        setMaxScroll(docHeight - windowHeight);
-      };
-  
-      updateMaxScroll();
-      
-      window.addEventListener("resize", updateMaxScroll);
-      
-      return () => window.removeEventListener("resize", updateMaxScroll);
-    }, []);
+    const currentAngle = useRef<number>(0);
+    
+    // Calculate the target angle based on scroll progress
+    const getTargetAngle = (progress: number) => {
+      // Map progress (0-1) to angle range (start at π/3 to -π/3)
+      return (Math.PI / 3) * (1 - 3 * progress);
+    };
   
     useFrame(() => {
-      if (cameraRef.current && maxScroll > 0) {
-        const scrollProgress = Math.min(scrollPosition / maxScroll, 1);
+      if (cameraRef.current) {
+        // Calculate the target angle based on scroll progress
+        const targetAngle = getTargetAngle(scrollProgress);
+        
+        // Smooth transition between angles
+        currentAngle.current += (targetAngle - currentAngle.current) * 0.1;
+        
         const radius = 200;
         
-        // Map scroll progress to an angle that goes from top to bottom (π to -π)
-        const angle = (1 * Math.PI / 1.2) * (1 - 2.1 * scrollProgress);
+        // Fixed x position for stability
+        const x = -50;
         
-        // Add an offset to the x position (30 degrees converted to radians)
-        const angleOffset = Math.PI / 6;  // 30 degrees in radians
-        
-        const x = -50 * Math.cos(angleOffset);  // Apply angleOffset to the x position
-        const y = radius * Math.sin(angle);
-        const z = radius * Math.cos(angle);
+        // Calculate y and z based on the current angle
+        const y = radius * Math.sin(currentAngle.current);
+        const z = radius * Math.cos(currentAngle.current);
         
         cameraRef.current.position.set(x, y, z);
         cameraRef.current.lookAt(0, 0, 0);
@@ -74,8 +68,7 @@ const SatelliteModel = ({ isMobile }: { isMobile: boolean }) => {
         fov={45}
       />
     );
-  };
-  
+};
 
 const LoadingScreen = () => {
   const { progress } = useProgress();
@@ -91,35 +84,88 @@ const LoadingScreen = () => {
 };
 
 const Satellite3D = () => {
-    const [scrollPosition, setScrollPosition] = useState(0);
+    const [scrollProgress, setScrollProgress] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
     const { progress } = useProgress();
     const isLoading = progress < 100;
+    const containerRef = useRef<HTMLDivElement>(null);
+    const targetScrollProgress = useRef<number>(0);
+    const animationFrameRef = useRef<number | null>(null);
+    
+    // Reference for viewport height
+    const viewportHeight = useRef<number>(window.innerHeight);
+  
+    // Calculate scroll progress with 100vh before and after the component
+    const calculateScrollProgress = () => {
+      if (!containerRef.current) return 0;
+      
+      const rect = containerRef.current.getBoundingClientRect();
+      const elementTop = rect.top;
+      const elementHeight = rect.height;
+      const vh = viewportHeight.current;
+      
+      // Total animation distance: 100vh before element + element height + 100vh after element
+      const totalAnimationDistance = vh + elementHeight + vh;
+      
+      // Animation starts 100vh before the element enters the viewport
+      const animationStartPosition = vh;
+      
+      // Current position relative to the animation start
+      const currentPosition = animationStartPosition - elementTop;
+      
+      // Calculate progress based on the current position within the total animation distance
+      const progress = currentPosition / totalAnimationDistance;
+      
+      // Clamp between 0 and 1
+      return Math.max(0, Math.min(1, progress));
+    };
   
     useEffect(() => {
       const handleScroll = () => {
-        setScrollPosition(window.scrollY);
+        targetScrollProgress.current = calculateScrollProgress();
       };
   
-      const checkMobile = () => {
+      const handleResize = () => {
+        viewportHeight.current = window.innerHeight;
         setIsMobile(window.innerWidth <= 768);
+        handleScroll(); // Recalculate on resize
       };
   
       window.addEventListener("scroll", handleScroll, { passive: true });
-      window.addEventListener("resize", checkMobile);
+      window.addEventListener("resize", handleResize);
+      
+      // Initial calculation
+      handleResize();
+      handleScroll();
   
-      // Initial check for mobile state
-      checkMobile();
-  
+      // Animation loop for smooth scrolling
+      const smoothScrollAnimation = () => {
+        // Use a slightly higher factor for smoother but responsive animation
+        const newProgress = scrollProgress + (targetScrollProgress.current - scrollProgress) * 0.075;
+        
+        // Only update if there's a noticeable change
+        if (Math.abs(newProgress - scrollProgress) > 0.0005) {
+          setScrollProgress(newProgress);
+        }
+        
+        animationFrameRef.current = requestAnimationFrame(smoothScrollAnimation);
+      };
+      
+      animationFrameRef.current = requestAnimationFrame(smoothScrollAnimation);
+      
       return () => {
         window.removeEventListener("scroll", handleScroll);
-        window.removeEventListener("resize", checkMobile);
+        window.removeEventListener("resize", handleResize);
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
       };
-    }, []);
+    }, [scrollProgress]);
   
     return (
       <Box
-        h="100%"
+        ref={containerRef}
+        h={isMobile ? "40vh" : "100vh"}
         bg="transparent"
         display="flex"
         alignItems="center"
@@ -128,7 +174,7 @@ const Satellite3D = () => {
         w="100%"
       >
         <Canvas>
-          <ScrollCamera scrollPosition={scrollPosition} />
+          <ScrollCamera scrollProgress={scrollProgress} />
           <ambientLight intensity={0.5} />
           <directionalLight
             position={[100, 100, 100]}
@@ -145,6 +191,6 @@ const Satellite3D = () => {
         {isLoading && <LoadingScreen />}
       </Box>
     );
-  };
+};
   
-  export default Satellite3D;
+export default Satellite3D;
