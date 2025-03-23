@@ -24,7 +24,7 @@ const CosmonautModel = () => {
     if (mixer.current) mixer.current.update(delta);
   });
 
-  return <primitive object={scene} scale={0.5} />;
+  return <primitive object={scene} scale={0.4} />;
 };
 
 const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
@@ -45,8 +45,8 @@ const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
   useFrame(() => {
     if (cameraRef.current) {
       // Reduce scroll sensitivity for mobile devices
-      const scrollMultiplier = isMobile ? 0.5 : 1;
-      const startingPostion = isMobile ? 20 : 200;
+      const scrollMultiplier = isMobile ? 0.4 : 1;
+      const startingPostion = isMobile ? 10 : 200;
       cameraRef.current.position.x = startingPostion - scrollPosition * scrollMultiplier;
     }
   });

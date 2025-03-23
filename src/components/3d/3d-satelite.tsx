@@ -5,26 +5,28 @@ import modelUrl from "../../assets/low-polyish_satellite.glb";
 import * as THREE from "three";
 import { Box } from "@chakra-ui/react";
 
-const SatelliteModel = () => {
-  const { scene, animations } = useGLTF(modelUrl);
-  const mixer = useRef<THREE.AnimationMixer | null>(null);
-
-  useEffect(() => {
-    if (animations && animations.length) {
-      mixer.current = new THREE.AnimationMixer(scene);
-      animations.forEach((clip) => {
-        const action = mixer.current!.clipAction(clip);
-        action.play();
-      });
-    }
-  }, [scene, animations]);
-
-  useFrame((state, delta) => {
-    if (mixer.current) mixer.current.update(delta);
-  });
-
-  return <primitive object={scene} scale={2} position={[0, -30, 0]} />;
-};
+const SatelliteModel = ({ isMobile }: { isMobile: boolean }) => {
+    const { scene, animations } = useGLTF(modelUrl);
+    const mixer = useRef<THREE.AnimationMixer | null>(null);
+  
+    useEffect(() => {
+      if (animations && animations.length) {
+        mixer.current = new THREE.AnimationMixer(scene);
+        animations.forEach((clip) => {
+          const action = mixer.current!.clipAction(clip);
+          action.play();
+        });
+      }
+    }, [scene, animations]);
+  
+    useFrame((state, delta) => {
+      if (mixer.current) mixer.current.update(delta);
+    });
+  
+    const scaleValue = isMobile ? 0.8 : 2;
+  
+    return <primitive object={scene} scale={scaleValue} position={[0, -30, 0]} />;
+  };
 
 const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -39,7 +41,6 @@ const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
     };
     
     const updateMaxScroll = () => {
-      // Calculation for maximum possible scroll
       const docHeight = document.body.scrollHeight;
       const windowHeight = window.innerHeight;
       setMaxScroll(docHeight - windowHeight);
@@ -58,26 +59,18 @@ const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
 
   useFrame(() => {
     if (cameraRef.current && maxScroll > 0) {
-      // Calculate normalized scroll progress (0 to 1)
       const scrollProgress = Math.min(scrollPosition / maxScroll, 1);
+      const radius = 200;
       
-      // Define the orbit path
-      const radius = 200; // Distance from center
+      // Map scroll progress to an angle that goes from top to bottom (π to -π)
+      const angle = (Math.PI / 1) * (1 - 2 * scrollProgress);
       
-      // Map scroll progress to an angle that goes from top to bottom (π/2 to -π/2)
-      // Start at top (π/2 radians or 90 degrees)
-      // End at bottom (-π/2 radians or -90 degrees)
-      const angle = (Math.PI / 2) * (1 - 2 * scrollProgress);
       
-      // Calculate camera position using spherical coordinates
-      const x = 50; // Keep camera centered horizontally
-      const y = radius * Math.sin(angle); // Vertical position (top to bottom)
-      const z = radius * Math.cos(angle); // Depth position
+      const x = 50; 
+      const y = radius * Math.sin(angle);
+      const z = radius * Math.cos(angle);
       
-      // Update camera position
       cameraRef.current.position.set(x, y, z);
-      
-      // Always look at the center where the satellite is
       cameraRef.current.lookAt(0, 0, 0);
     }
   });
@@ -86,7 +79,7 @@ const ScrollCamera = ({ scrollPosition }: { scrollPosition: number }) => {
     <PerspectiveCamera
       ref={cameraRef}
       makeDefault
-      position={[50, 200, 400]} // Initial position at the top
+      position={[50, 200, 400]}
       fov={45}
     />
   );
@@ -106,41 +99,55 @@ const LoadingScreen = () => {
 };
 
 const Satellite3D = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const { progress } = useProgress();
-  const isLoading = progress < 100;
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollPosition(window.scrollY);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return (
-    <Box
-      h="100%"
-      bg="transparent"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      position="relative"
-      w="100%"
-    >
-      <Canvas>
-        <ScrollCamera scrollPosition={scrollPosition} />
-        <ambientLight intensity={0.5} />
-        <directionalLight
-          position={[100, 100, 100]}
-          intensity={1.5}
-          castShadow
-        />
-        <SatelliteModel />
-      </Canvas>
-      {isLoading && <LoadingScreen />}
-    </Box>
-  );
-};
-
-export default Satellite3D;
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
+    const { progress } = useProgress();
+    const isLoading = progress < 100;
+  
+    useEffect(() => {
+      const handleScroll = () => {
+        setScrollPosition(window.scrollY);
+      };
+  
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth <= 768);
+      };
+  
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      window.addEventListener("resize", checkMobile);
+  
+      // Initial check for mobile state
+      checkMobile();
+  
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("resize", checkMobile);
+      };
+    }, []);
+  
+    return (
+      <Box
+        h="100%"
+        bg="transparent"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        position="relative"
+        w="100%"
+      >
+        <Canvas>
+          <ScrollCamera scrollPosition={scrollPosition} />
+          <ambientLight intensity={0.5} />
+          <directionalLight
+            position={[100, 100, 100]}
+            intensity={1.5}
+            castShadow
+          />
+          <SatelliteModel isMobile={isMobile} />
+        </Canvas>
+        {isLoading && <LoadingScreen />}
+      </Box>
+    );
+  };
+  
+  export default Satellite3D;
