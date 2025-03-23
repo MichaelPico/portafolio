@@ -8,7 +8,9 @@ const Background3D = () => {
   const originalPositions = useRef<Float32Array | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    // Store the current ref value to use in cleanup
+    const container = containerRef.current;
+    if (!container) return;
     
     // Setup scene
     const scene = new THREE.Scene();
@@ -23,7 +25,7 @@ const Background3D = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 1);
-    containerRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
     
     // Add light
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -125,8 +127,8 @@ const Background3D = () => {
       cancelAnimationFrame(frameId);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
-      if (containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (container) {
+        container.removeChild(renderer.domElement);
       }
       starsGeometry.dispose();
       starsMaterial.dispose();
