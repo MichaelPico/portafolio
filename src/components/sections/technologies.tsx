@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid } from '@chakra-ui/react';
 import { Technology, TechnologyCard } from '../technology-icon';  // Your existing component
 
 const TechnologiesSection = () => {

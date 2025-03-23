@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, VStack, Text, Image, SimpleGrid } from '@chakra-ui/react';
+import { Box, VStack, Text, Image } from '@chakra-ui/react';
 
 // Import the images
 import TypescriptLogo from '../assets/technologies/Typescript_logo_2020.svg';
