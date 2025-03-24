@@ -1,53 +1,11 @@
 import { Box } from "@chakra-ui/react";
 import Cosmonaut3D from "../3d/3d-cosmonaut";
-import { useEffect, useState } from "react";
 
 export default function HelloSection() {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const textStyles = {
     fontSize: ["3xl", "5xl", "8xl"],
-    fontWeight: "bold", 
+    fontWeight: "bold",
     color: "white",
-    opacity: 0,
-    transform: "translateY(20px)",
-    animation: "fadeIn 1s ease-out forwards",
-    sx: {
-      "@keyframes fadeIn": {
-        "0%": {
-          opacity: 0,
-          transform: "translateY(20px)",
-        },
-        "100%": {
-          opacity: 1,
-          transform: "translateY(0)",
-        },
-      },
-      "@keyframes fadeOut": {
-        "0%": {
-          opacity: 1,
-          transform: "translateY(0)",
-        },
-        "50%": {
-          transform: "translateY(10px)",
-        },
-        "100%": {
-          opacity: 0,
-          transform: "translateY(-20px)",
-        },
-      },
-      "&.fade-out": {
-        animation: "fadeOut 1.5s ease-out forwards",
-      },
-    }
   };
 
   return (
@@ -58,6 +16,7 @@ export default function HelloSection() {
       alignItems="center"
       justifyContent="center"
       overflow="hidden"
+      as="section"
     >
       <Cosmonaut3D />
       <Box
@@ -72,17 +31,9 @@ export default function HelloSection() {
         top="6vh"
         padding="40px"
       >
-        <Box
-          {...textStyles}
-          mb={`${Math.max(-40, 0 - scrollY/20)}vh`}
-          className={scrollY > 100 ? "fade-out" : ""}
-        >
+        <Box {...textStyles} mb="-40vh">
           Hello,
-        </Box>
-        <Box
-          {...textStyles}
-          className={scrollY > 100 ? "fade-out" : ""}
-        >
+          <br/>
           I am Michael Pico!
         </Box>
       </Box>
