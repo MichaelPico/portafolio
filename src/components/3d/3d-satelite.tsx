@@ -35,7 +35,7 @@ const ScrollCamera = ({ scrollProgress }: { scrollProgress: number }) => {
     // Calculate the target angle based on scroll progress
     const getTargetAngle = (progress: number) => {
       // Map progress (0-1) to angle range (start at π/3 to -π/3)
-      return (Math.PI / 3) * (1 - 3 * progress);
+      return (Math.PI / 2.8) * (1 - 2.8 * progress);
     };
   
     useFrame(() => {
@@ -64,7 +64,7 @@ const ScrollCamera = ({ scrollProgress }: { scrollProgress: number }) => {
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
-        position={[200, 300, 500]}
+        position={[200, 550, 750]}
         fov={45}
       />
     );

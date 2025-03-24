@@ -27,7 +27,7 @@ const CosmonautModel = ({ isMobile }: { isMobile: boolean }) => {
     if (mixer.current) mixer.current.update(delta);
   });
 
-  return <primitive object={scene} scale={isMobile ? 0.4 : 0.55} position={[0, 0, 0]} />;
+  return <primitive object={scene} scale={isMobile ? 0.4 : 0.55} position={[0, -25, 0]} />;
 };
 
 const ScrollCamera = () => {
@@ -40,7 +40,7 @@ const ScrollCamera = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const startingPositionX = screenWidth * 0.2 - 70;
+  const startingPositionX = screenWidth * 0.17 - 70;
 
   // Animate camera with GSAP ScrollTrigger
   useEffect(() => {
