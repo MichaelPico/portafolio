@@ -1,13 +1,38 @@
+import React, { useState, useEffect } from 'react';
 import { Box, Flex, Image, Link } from '@chakra-ui/react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import MPLogo from '../assets/michael-pico-logo.svg';
 
 const Navbar = () => {
+  const [visible, setVisible] = useState(true);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = ()  => {
+      const currentScrollPos = window.pageYOffset;
+
+      // Show navbar when scrolling up, hide when scrolling down
+      setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 50);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollPos]);
 
   const linkedin_url = process.env.REACT_APP_LINKEDIN_URL;
   const github_url = process.env.REACT_APP_GITHUB_URL;
+
   return (
-    <Box as="nav" position="fixed" w="100%" top={0} zIndex={100}>
+    <Box 
+      as="nav" 
+      position="fixed" 
+      w="100%" 
+      top={0} 
+      zIndex={100}
+      transform={`translateY(${visible ? '0' : '-100%'})`}
+      transition="transform 0.3s ease-in-out"
+    >
       <Flex 
         px={8} 
         py={4} 
