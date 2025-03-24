@@ -161,6 +161,15 @@ const Satellite3D = () => {
         }
       };
     }, [scrollProgress]);
+
+      // Log credits in the console
+      useEffect(() => {
+        console.log(
+          "Low-poly(ish) satellite model created by Icilaba\n" +
+            "Source: https://sketchfab.com/3d-models/low-polyish-satellite-f22852a97c1e4d08b3e9da12277cf531"
+        );
+      }, []);
+      
   
     return (
       <Box

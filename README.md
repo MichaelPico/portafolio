@@ -27,9 +27,10 @@ A personal portfolio website built with modern web technologies.
 
 ## Credits
 
-The 3D Cosmonaut model used in this project is created by Yury Misiyuk (Tim0) and is licensed under CC Attribution Creative Commons Attribution.
-
+The 3D Cosmonaut model used in this project is created by Yury Misiyuk (Tim0) and is licensed under CC Attribution Creative Commons Attribution.  
 Original model can be found at: https://sketchfab.com/3d-models/cosmonaut-on-a-rocket-e93cbbdb9a2144fb9f63d062566f3e63
+
+The Low-poly(ish) satellite model is created by Icilaba and can be found at: [Low-poly(ish) satellite](https://sketchfab.com/3d-models/low-polyish-satellite-f22852a97c1e4d08b3e9da12277cf531)
 
 ## License
 
