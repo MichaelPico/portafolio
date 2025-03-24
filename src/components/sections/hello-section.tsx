@@ -69,7 +69,7 @@ export default function HelloSection() {
         alignItems="flex-start"
         justifyContent="flex-start"
         position="absolute"
-        top="40px"
+        top="6vh"
         padding="40px"
       >
         <Box

@@ -61,7 +61,7 @@ export const TechnologyCard: React.FC<TechnologyCardProps> = ({ technology }) =>
     <Box
       borderRadius="md"
       overflow="hidden"
-      bg="gray.800"
+      bg="rgba(0,0,0,0.4)"
       p={3}
       _hover={{
         transform: 'translateY(-5px)',

@@ -39,7 +39,7 @@ const TechnologiesSection = () => {
 
   // More compact category styling
   const categoryStyle = {
-    bg: "gray.700",
+    bg: "rgba(0,0,0,0.2)",
     borderRadius: "lg",
     p: 4,
     mb: 4,
@@ -73,7 +73,7 @@ const TechnologiesSection = () => {
             '@keyframes fadeInTitle': fadeInKeyframes,
           }}
         >
-          Technologies I Use
+          Technologies I use
         </Heading>
 
         <Box
